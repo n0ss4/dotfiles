@@ -1,0 +1,171 @@
+[user]
+    name = Nossair Ghazouani
+    email = nossair.riffi@gmail.com
+
+[core]
+    editor = nvim
+    autocrlf = input
+    safecrlf = warn
+    filemode = false
+    algorithm = histogram
+    excludesfile = ~/.gitignore_global
+    pager = delta --features=side-by-side --line-numbers
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = true
+
+[push]
+    default = current
+    followTags = true
+
+[fetch]
+    prune = true
+    tags = true
+
+[rebase]
+    autoStash = true
+    updateRefs = true
+
+[merge]
+    tool = nvim
+    conflictstyle = diff3
+    ff = only
+
+[diff]
+    algorithm = histogram
+    renames = copies
+    mnemonicPrefix = true
+    tool = nvim
+
+[difftool]
+    prompt = false
+
+[mergetool]
+    prompt = false
+    keepBackup = false
+
+[status]
+    showUntrackedFiles = all
+    showStash = true
+
+[log]
+    date = relative
+    follow = true
+
+[color]
+    ui = auto
+    branch = auto
+    diff = auto
+    status = auto
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "diff"]
+    meta = yellow bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = cyan
+
+[alias]
+    st = status --short --branch
+    co = checkout
+    br = branch
+    ci = commit
+    ca = commit --amend
+    can = commit --amend --no-edit
+    
+    cm = commit --message
+    cam = commit --all --message
+    cma = commit --all --verbose
+
+    cob = checkout -b
+    sw = switch
+    swc = switch -c
+    
+    lg = log --oneline --graph --decorate --all
+    lgg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --all
+    lol = log --oneline --graph --decorate
+    lola = log --oneline --graph --decorate --all
+    
+    hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+    
+    changes = log --pretty=format:'%h %s' --name-only
+    stat = log --stat --summary
+    
+    sl = stash list
+    sp = stash pop
+    ss = stash save
+    
+    d = diff
+    dc = diff --cached
+    ds = diff --stat
+    dn = diff --name-only
+    
+    unstage = reset HEAD --
+    discard = checkout --
+
+    rim = rebase --interactive main
+    rod = rebase --interactive origin/develop
+
+    clean-branches = "!git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d"
+
+    contributors = shortlog --summary --numbered --email
+    whoami = "!git config --get user.name && git config --get user.email"
+
+    undo = reset --soft HEAD~1
+    redo = reset 'HEAD@{1}'
+    
+    search = "!f() { git log --grep=\"$1\" --oneline; }; f"
+
+    modified = ls-files --modified
+
+    publish = "!git push -u origin $(git branch --show-current)"
+
+    sync = "!git fetch upstream && git checkout main && git merge upstream/main"
+
+    wip = commit -am "WIP: work in progress"
+    save = !git add -A && git commit -m 'SAVEPOINT'
+    back = reset HEAD~1 --mixed
+
+    summary = "!f() { \
+        echo 'Repository Summary:'; \
+        echo '=================='; \
+        echo 'Remote URL:' $(git remote get-url origin); \
+        echo 'Current Branch:' $(git branch --show-current); \
+        echo 'Last Commit:' $(git log -1 --pretty=format:'%h - %s (%cr)'); \
+        echo 'Contributors:' $(git shortlog -sn | wc -l); \
+        echo 'Total Commits:' $(git rev-list --all --count); \
+    }; f"
+
+[includeIf "gitdir:~/ifcodev/"]
+    path = ~/ifcodev/.gitconfig
+
+[includeIf "gitdir:~/nttdata/"]
+    path = ~/nttdata/.gitconfig
+
+[delta]
+    navigate = true
+    light = false
+    line-numbers = true
+    syntax-theme = Dracula
+
+[interactive]
+    diffFilter = delta --color-only --features=interactive
+
+[credential]
+    helper = cache --timeout=900
+
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
