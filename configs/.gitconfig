@@ -149,8 +149,8 @@
         echo 'Total Commits:' $(git rev-list --all --count); \
     }; f"
 
-[includeIf "gitdir:~/ifcodev/"]
-    path = ~/ifcodev/.gitconfig
+[includeIf "gitdir:~/eroski/"]
+    path = ~/eroski/.gitconfig
 
 [includeIf "gitdir:~/nttdata/"]
     path = ~/nttdata/.gitconfig
