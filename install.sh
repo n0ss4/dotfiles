@@ -71,8 +71,13 @@ command_exists() {
 
 install_oh_my_zsh() {
     print_step "Setting up Oh My Zsh..."
-    
-    if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+
+    if [[ -d "$HOME/.oh-my-zsh" ]] && [[ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
+        print_warning "Oh My Zsh directory exists but is incomplete, removing..."
+        rm -rf "$HOME/.oh-my-zsh"
+    fi
+
+    if [[ ! -d "$HOME/.oh-my-zsh" ]] || [[ ! -f "$HOME/.oh-my-zsh/oh-my-zsh.sh" ]]; then
         print_info "Installing Oh My Zsh..."
         sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
         print_success "Oh My Zsh installed"
@@ -102,19 +107,26 @@ install_oh_my_zsh() {
 
 setup_zsh_config() {
     print_step "Setting up Zsh configuration..."
-    
+
     mkdir -p "$HOME/.config/zsh/config"
     mkdir -p "$HOME/.config/zsh/local"
-    
-    create_symlink "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
-    
+
     for config_file in "$DOTFILES_DIR/zsh/config"/*.zsh; do
         if [[ -f "$config_file" ]]; then
             filename="$(basename "$config_file")"
             create_symlink "$config_file" "$HOME/.config/zsh/config/$filename"
         fi
     done
-    
+
+    if [[ -f "$HOME/.zshrc" ]] && [[ ! -L "$HOME/.zshrc" ]]; then
+        if grep -q "oh-my-zsh" "$HOME/.zshrc" 2>/dev/null; then
+            print_info "Removing default Oh My Zsh .zshrc"
+            rm "$HOME/.zshrc"
+        fi
+    fi
+
+    create_symlink "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
+
     print_success "Zsh configuration linked"
 }
 

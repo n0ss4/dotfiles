@@ -4,22 +4,30 @@ export ZSH_CONFIG="$HOME/.config/zsh"
 
 export ZSH="$HOME/.oh-my-zsh"
 
-config_files=(
+config_files_before=(
     "exports.zsh"
     "plugins.zsh"
     "history.zsh"
     "completion.zsh"
-    "aliases.zsh"
-    "functions.zsh"
-    "tools.zsh"
 )
 
-for config_file in "${config_files[@]}"; do
+for config_file in "${config_files_before[@]}"; do
     config_path="$ZSH_CONFIG/config/$config_file"
     [[ -r "$config_path" ]] && source "$config_path"
 done
 
 [[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+
+config_files_after=(
+    "aliases.zsh"
+    "functions.zsh"
+    "tools.zsh"
+)
+
+for config_file in "${config_files_after[@]}"; do
+    config_path="$ZSH_CONFIG/config/$config_file"
+    [[ -r "$config_path" ]] && source "$config_path"
+done
 
 if [[ -d "$ZSH_CONFIG/local" ]]; then
     local old_nullglob=$(setopt | grep nullglob)
@@ -35,3 +43,10 @@ if [[ -d "$ZSH_CONFIG/local" ]]; then
     
     [[ -z "$old_nullglob" ]] && unsetopt nullglob
 fi
+# pnpm
+export PNPM_HOME="/home/n0ss4/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
